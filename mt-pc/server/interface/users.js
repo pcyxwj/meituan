@@ -1,14 +1,14 @@
-import Router from 'Koa-router';
-import Redis from 'Koa-redis';
+import Router from 'koa-router';
+import Redis from 'koa-redis';
 import nodeMailer from 'nodemailer';
 import User from '../../server/dbs/models/users';
 import Passport from '../../server/interface/utils/passport';
 import Email from '../../server/dbs/config';
 import axios from '../../server/interface/utils/axios';
 
-// let router = new Router({
-//     prefix:'/users'
-// })
+let router = new Router({
+    prefix:'/users'
+})
 
 let Store = new Redis().client
 

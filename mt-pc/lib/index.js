@@ -36,7 +36,7 @@ var _passport = require('./interface/utils/passport.js');
 
 var _passport2 = _interopRequireDefault(_passport);
 
-var _users = require('../components/public/users.js');
+var _users = require('./interface/users.js');
 
 var _users2 = _interopRequireDefault(_users);
 

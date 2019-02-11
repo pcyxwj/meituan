@@ -11,7 +11,7 @@ import Redis from 'koa-redis'
 import json from 'koa-json'
 import dbConfig from './dbs/config.js'
 import passport from './interface/utils/passport.js'
-import users from '../components/public/users.js'
+import users from './interface/users.js'
 
 const app = new Koa()
 const host = process.env.HOST || '127.0.0.1'
