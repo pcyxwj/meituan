@@ -164,10 +164,11 @@ export default {
           //如果验证码发送成功则开始倒计时
           if(status===200 && data && data.code === 0) {
             let count = 60;
-            self.statusMsg='验证码已发送,剩余${count--}秒';
+            self.statusMsg=`验证码已发送,剩余${count--}秒`;
             //定时器
             self.timerid=setInterval(function () {
-              if(count===0) {
+              self.statusMsg=`验证码已发送,剩余${count--}秒`;
+              if(count < 0) {
                 clearInterval(self.timerid)
               }
             },1000)
@@ -191,12 +192,12 @@ export default {
           }).then(({status,data})=>{
             if(status===200) {
               if(data && data.code===0) {
-                location.href='/login'
+                location.href='/login';
               } else {
                 self.error=data.msg;
               }
             } else {
-              self.error='服务器出错，错误码${status}'
+              self.error=`服务器出错，错误码${status}`;
             }
             //定时清空error信息，防止修改后仍然报错
             setTimeout(function () {

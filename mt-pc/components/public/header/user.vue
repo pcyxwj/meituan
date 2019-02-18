@@ -21,10 +21,15 @@
       return {
         user: ''
       }
+    },
+    async mounted() {
+      // this.$axios.get('users/getUser')请求接口
+      const {status, data:{user}} = await this.$axios.get('/users/getUser');
+      //如果接口返回成功
+      if(status === 200) {
+        this.user = user;
+      }
     }
   }
 </script>
 
-<style scoped>
-
-</style>

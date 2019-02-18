@@ -36,9 +36,25 @@ var _passport = require('./interface/utils/passport.js');
 
 var _passport2 = _interopRequireDefault(_passport);
 
-var _users = require('./interface/users.js');
+var _users = require('./interface/users');
 
 var _users2 = _interopRequireDefault(_users);
+
+var _geo = require('./interface/geo');
+
+var _geo2 = _interopRequireDefault(_geo);
+
+var _search = require('./interface/search');
+
+var _search2 = _interopRequireDefault(_search);
+
+var _categroy = require('./interface/categroy');
+
+var _categroy2 = _interopRequireDefault(_categroy);
+
+var _cart = require('./interface/cart');
+
+var _cart2 = _interopRequireDefault(_cart);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -70,25 +86,11 @@ _mongoose2.default.connect(_config2.default.dbs, {
 app.use(_passport2.default.initialize());
 app.use(_passport2.default.session());
 //Import and Set Nuxt.js options
-var config = require('../../nuxt.config.js');
+var config = require('../nuxt.config.js');
 config.dev = !(app.env === 'production');
 
 var proxyMiddleware = require('http-proxy-middleware');
-
-// proxy api requests这里就是添加的proxyTable中间价的设置了
 var proxyTable = config.dev.proxyTable;
-
-Object.keys(proxyTable).forEach(function (context) {
-  var options = proxyTable[context];
-  if (typeof options === 'string') {
-    options = { target: options };
-  }
-  app.use(proxyMiddleware(options.filter || context, options));
-});
-
-app.use(nuxt.render); //这里是添加nuxt渲染层服务的中间件
-
-console.log('Server is listening on http://localhost:3000');
 
 async function start() {
   // Instantiate nuxt.js
@@ -101,6 +103,10 @@ async function start() {
   }
 
   app.use(_users2.default.routes()).use(_users2.default.allowedMethods());
+  app.use(_geo2.default.routes()).use(_geo2.default.allowedMethods());
+  app.use(_search2.default.routes()).use(_search2.default.allowedMethods());
+  app.use(_categroy2.default.routes()).use(_categroy2.default.allowedMethods());
+  app.use(_cart2.default.routes()).use(_cart2.default.allowedMethods());
   //路由要放在这之前，否则可能失效
   app.use(function (ctx) {
     ctx.status = 200; // koa defaults to 404 when it sees that status is unset
@@ -117,7 +123,7 @@ async function start() {
 
   app.listen(port, host);
   consola.ready({
-    message: 'Server listening on http://${host}:${port}',
+    message: 'Server listening on http://' + host + ':' + port,
     badge: true
   });
 }

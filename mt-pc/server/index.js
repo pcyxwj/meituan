@@ -11,7 +11,11 @@ import Redis from 'koa-redis'
 import json from 'koa-json'
 import dbConfig from './dbs/config.js'
 import passport from './interface/utils/passport.js'
-import users from './interface/users.js'
+import users from './interface/users'
+import geo from './interface/geo'
+import search from './interface/search'
+import categroy from './interface/categroy'
+import cart from './interface/cart'
 
 const app = new Koa()
 const host = process.env.HOST || '127.0.0.1'
@@ -35,25 +39,11 @@ mongoose.connect(dbConfig.dbs,{
 app.use(passport.initialize())
 app.use(passport.session())
 //Import and Set Nuxt.js options
-let config = require('../../nuxt.config.js')
+let config = require('../nuxt.config.js')
 config.dev = !(app.env === 'production')
 
 var proxyMiddleware = require('http-proxy-middleware')
-
-// proxy api requests这里就是添加的proxyTable中间价的设置了
 var proxyTable = config.dev.proxyTable
-
-Object.keys(proxyTable).forEach(function (context) {
-  var options = proxyTable[context]
-  if (typeof options === 'string') {
-    options = { target: options }
-  }
-  app.use(proxyMiddleware(options.filter || context, options))
-})
-
-app.use(nuxt.render)//这里是添加nuxt渲染层服务的中间件
-
-console.log('Server is listening on http://localhost:3000')
 
 async function start() {
   // Instantiate nuxt.js
@@ -66,6 +56,10 @@ async function start() {
   }
 
   app.use(users.routes()).use(users.allowedMethods())
+  app.use(geo.routes()).use(geo.allowedMethods())
+  app.use(search.routes()).use(search.allowedMethods())
+  app.use(categroy.routes()).use(categroy.allowedMethods())
+  app.use(cart.routes()).use(cart.allowedMethods())
 //路由要放在这之前，否则可能失效
   app.use(ctx => {
     ctx.status = 200 // koa defaults to 404 when it sees that status is unset
@@ -82,7 +76,7 @@ async function start() {
 
   app.listen(port, host)
   consola.ready({
-    message: 'Server listening on http://${host}:${port}',
+    message: `Server listening on http://${host}:${port}`,
     badge: true
   })
 }

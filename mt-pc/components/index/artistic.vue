@@ -1,53 +1,126 @@
 <template>
-  <div class="m-istyle">
-    <dl>
+  <section class="m-istyle">
+    <dl @mouseover="over">
       <dt>有格调</dt>
       <dd
-        v-for="item in menu"
-        :key="item.type">{{item.name}}</dd>
+        :class="{active:kind==='all'}"
+        kind="all"
+        keyword="景点">全部</dd>
+      <dd
+        :class="{active:kind==='part'}"
+        kind="part"
+        keyword="美食">约会聚餐</dd>
+      <dd
+        :class="{active:kind==='spa'}"
+        kind="spa"
+        keyword="丽人">丽人SPA</dd>
+      <dd
+        :class="{active:kind==='movie'}"
+        kind="movie"
+        keyword="电影">电影演出</dd>
+      <dd
+        :class="{active:kind==='travel'}"
+        kind="travel"
+        keyword="旅游">品质出游</dd>
     </dl>
-    <div class="ibody"
-         v-if="kind">
-      <template v-for="item in menu.child">
-        {{item.name}}
-      </template>
-    </div>
-  </div>
+    <ul class="ibody">
+      <li href="#"
+        v-for="item in cur"
+        :key="item.title">
+        <el-card
+          :body-style="{ padding: '0px' }"
+          shadow="never">
+          <img
+            :src="item.img"
+            class="image">
+          <ul class="cbody">
+            <li class="title">{{ item.title }}</li>
+            <li class="pos"><span>{{ item.pos }}</span></li>
+            <li class="price">￥<em>{{ item.price }}</em><span>/起</span></li>
+          </ul>
+        </el-card>
+      </li>
+    </ul>
+  </section>
 </template>
-
 <script>
-    export default {
-      data() {
-        return {
-          kind: '',
-          menu:[{
-            type:'food',
-            name:'美食',
-            child:[{
-              title:'美食',
-              child:['代金券','甜点饮品','火锅','自助餐','小吃快餐']
-            }]
-          },{
-            type:'takeout',
-            name:'外卖',
-            child:[{
-              title:'外卖',
-              child:['美团外卖']
-            }]
-          },{
-            type:'hotel',
-            name:'酒店',
-            child:[{
-              title:'酒店星级',
-              child:['经济型','舒适/三星','高档/四星','豪华/五星']
-            }]
-          }]
+  export default {
+    data: () => {
+      return {
+        kind: 'all',
+        list: {
+          all: [],
+          part: [],
+          spa: [],
+          movie: [],
+          travel: []
         }
       }
-    }
-</script>
+    },
+    computed: {
+      cur: function () {
+        return this.list[this.kind]
+      }
+    },
+    async mounted(){
+      let self=this;
+      let {status,data:{count,pois}}=await self.$axios.get('/search/resultsByKeywords',{
+        params:{
+          keyword:'景点',
+          city:self.$store.state.geo.position.city
+        }
+      })
+      if(status===200&&count>0){
+        let r= pois.filter(item=>item.photos.length).map(item=>{
+          return {
+            title:item.name,
+            pos:item.type.split(';')[0],
+            price:item.biz_ext.cost||'暂无',
+            img:item.photos[0].url,
+            url:'//abc.com'
+          }
+        })
+        self.list[self.kind]=r.slice(0,9)
+      }else{
+        self.list[self.kind]=[]
+      }
+    },
+    methods: {
+      over: async function (e) {
+        let dom = e.target
+        let tag = dom.tagName.toLowerCase()
+        let self = this
+        if (tag === 'dd') {
+          this.kind = dom.getAttribute('kind')
+          let keyword = dom.getAttribute('keyword')
+          let {status,data:{count,pois}}=await self.$axios.get('/search/resultsByKeywords',{
+            params:{
+              keyword,
+              city:self.$store.state.geo.position.city
+            }
+          })
+          if(status===200&&count>0){
+            //要求是有图片的数据
+            //用自己的字段开发，做数据集合时做一层mock映射，防止后端改动数据格式
+            let r= pois.filter(item=>item.photos.length).map(item=>{
+              return {
+                title:item.name,
+                pos:item.type.split(';')[0],
+                price:item.biz_ext.cost||'暂无',
+                img:item.photos[0].url,
+                url:'//abc.com'
+              }
+            })
+            self.list[self.kind]=r.slice(0,9)
+          }else{
+            self.list[self.kind]=[]
+          }
+        }
+      }
+    },
 
+  }
+</script>
 <style lang="scss">
   @import "@/assets/css/index/artistic.scss";
 </style>
-

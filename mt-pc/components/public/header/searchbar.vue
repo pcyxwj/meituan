@@ -23,17 +23,21 @@
             v-if="isHotPlace"
             class="hotPlace">
             <dt>热门搜索</dt>
-            <dd v-for="(item,idx) in searchList"
-                :key="idx">{{ item }}</dd>
+            <dd v-for="(item,idx) in $store.state.home.hotPlace.toString().slice(0,5)"
+                :key="idx">{{ item.name }}</dd>
           </dl>
           <dl
             v-if="isSearchList"
             class="searchList">
-            <dd v-for="(item,idx) in hotPlace"
-                :key="idx">{{ item }}</dd>
+            <dd v-for="(item,idx) in searchList"
+                :key="idx">{{ item.name }}</dd>
           </dl>
         </div>
         <p class="suggest">
+          <a
+            v-for="(item,idx) in $store.state.home.hotPlace.slice(0,5)"
+            :key="idx"
+            :href="'/products?keyword='+encodeURIComponent(item.name)">{{ item.name }}</a>
         </p>
         <ul class="nav">
           <li><nuxt-link
@@ -67,13 +71,15 @@
 </template>
 
 <script>
+  //用于延时
+  import _ from 'lodash'
   export default {
     data(){
       return {
         isFocus: false,
         search: "",
-        hotPlace:['火锅','火锅','火锅'],
-        searchList:['故宫','故宫','故宫']
+        hotPlace:[],
+        searchList:[]
       }
     },
     computed: {
@@ -95,8 +101,21 @@
           self.isFocus=false;
         },200)
       },
-      input:function () {
-      }
+      input: _.debounce(async function () {
+          let self=this;
+          //去掉市
+          let city=self.$store.state.geo.position.city.toString().replace('市','');
+          //清空
+          self.searchList=[];
+          let {status,data:{top}} = await self.$axios.get('/search/top',{
+            params: {
+              input: self.search,
+              city
+            }
+          })
+          //查询完后截取数据的前十条进行展示
+          self.searchList=top.slice(0,10)
+        },300)
     }
   }
 </script>
