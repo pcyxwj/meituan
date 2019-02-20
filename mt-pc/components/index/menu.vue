@@ -35,7 +35,6 @@
     computed: {
       curdetail: async function () {
         this.menu=this.$store.state.home.menu;
-        console.log(this.menu)
         return this.menu.filter((item) =>  item.type === this.kind)[0];
       }
     },

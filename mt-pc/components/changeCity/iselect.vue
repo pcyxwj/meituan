@@ -65,8 +65,8 @@ export default {
   },
   mounted:async function(){
     let self=this;
-    let {status,data:{province}}=await self.$axios.get('/geo/province')
-    if(status===200){
+    let {status: status1,data:{province}}=await self.$axios.get('/geo/province')
+    if(status1===200){
       self.province=province.map(item=>{
         return {
           value:item.id,
@@ -95,9 +95,10 @@ export default {
       }
     },200),
     handleSelect:function(item){
-      this.$store.commit('setPosition',item.value)
-      //window.location.href = `/`;
-    }
+      sessionStorage.setItem("city",item.value)
+      window.location.href = `/`;
+      this.$store.commit('geo/setPosition',sessionStorage.getItem("city"));
+    },
   }
 }
 
