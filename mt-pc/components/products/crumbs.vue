@@ -2,7 +2,7 @@
   <div class="m-crumbs">
     <el-breadcrumb separator=">">
       <el-breadcrumb-item :to="{ path: '/' }">{{ mcity }}</el-breadcrumb-item>
-      <el-breadcrumb-item><a href="/">{{ mcity }}{{ decodeURIComponent(keyword) }}</a></el-breadcrumb-item>
+      <el-breadcrumb-item><a href="/">{{ decodeURIComponent(keyword) }}</a></el-breadcrumb-item>
     </el-breadcrumb>
   </div>
 </template>

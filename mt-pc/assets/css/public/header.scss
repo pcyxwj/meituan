@@ -76,7 +76,9 @@
             }
           }
 
-          .hotPlace,
+          .hotPlace {
+            margin: 0px;
+          },
           .searchList {
             position: absolute;
             top: 41px;

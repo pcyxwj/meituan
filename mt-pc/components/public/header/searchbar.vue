@@ -19,13 +19,13 @@
             @blur="blur"
             @input="input"/>
           <button class="el-button el-button--primary"><i class="el-icon-search"/></button>
-          <dl
-            v-if="isHotPlace"
-            class="hotPlace">
-            <dt>热门搜索</dt>
-            <dd v-for="(item,idx) in $store.state.home.hotPlace.slice(0,5)"
-                :key="idx">{{ item.name }}</dd>
-          </dl>
+          <!--<dl-->
+            <!--v-if="isHotPlace"-->
+            <!--class="hotPlace">-->
+            <!--<dt>热门搜索</dt>-->
+            <!--<dd v-for="(item,idx) in this.result.slice(0,5)"-->
+                <!--:key="idx">{{ item.name }}</dd>-->
+          <!--</dl>-->
           <dl
             v-if="isSearchList"
             class="searchList">
@@ -38,7 +38,7 @@
         </div>
         <p class="suggest">
           <a
-            v-for="(item,idx) in $store.state.home.hotPlace.slice(0,5)"
+            v-for="(item,idx) in this.result.slice(0,5)"
             :key="idx"
             :href="'/products?keyword='+encodeURIComponent(item.name)">{{ item.name }}</a>
         </p>
@@ -82,7 +82,9 @@
         isFocus: false,
         search: "",
         hotPlace:[],
-        searchList:[]
+        searchList:[],
+        result:[],
+        city:''
       }
     },
     computed: {
@@ -92,6 +94,18 @@
       isSearchList: function () {
         return this.isFocus&&this.search
       }
+    },
+    async mounted() {
+      let self=this;
+      //去掉市
+      let city=self.$store.state.geo.position.toString().replace('市','');
+      self.city = city
+      const {status:status3,data:{result}}=await self.$axios.get('/search/hotPlace',{
+        params:{
+          city: window.sessionStorage.getItem("city").replace('市','')
+        }
+      })
+      this.result = result;
     },
     methods: {
       focus: function () {
@@ -108,7 +122,7 @@
           let self=this;
           //去掉市
           let city=self.$store.state.geo.position.toString().replace('市','');
-          //清空
+        //清空
           self.searchList=[];
           let {status:status1,data:{top}} = await self.$axios.get('/search/top',{
             params: {

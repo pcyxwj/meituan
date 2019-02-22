@@ -57,6 +57,7 @@ export default {
   async asyncData({app}) {
     let { data } = await app.$axios.get('searchList')
     return { items: data.list }
+    console.log(data)
   },
   methods: {
     navSelect: function () {

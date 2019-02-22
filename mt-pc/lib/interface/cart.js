@@ -20,10 +20,6 @@ var _md = require('crypto-js/md5');
 
 var _md2 = _interopRequireDefault(_md);
 
-var _sign = require('./utils/sign');
-
-var _sign2 = _interopRequireDefault(_sign);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = new _koaRouter2.default({ prefix: '/cart' });
