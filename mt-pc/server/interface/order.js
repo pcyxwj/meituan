@@ -6,10 +6,10 @@ import md5 from 'crypto-js/md5'
 
 let router = new Router({prefix: '/order'})
 
-router.post('/createOrder', async ctx => {
+router.post('/createOrder', async (ctx) => {
 let{id, price, count} = ctx.request.body
   let time = Date()
-  let orderId = md5(Math.random() * 1000 + time).toString()
+  let orderID = md5(Math.random() * 1000 + time).toString()
 
   if (!ctx.isAuthenticated()) {
     ctx.body = {
@@ -19,7 +19,7 @@ let{id, price, count} = ctx.request.body
   } else {
     let findCart = await Cart.findOne({cartNo: id})
     let order = new Order({
-      id: orderId,
+      id: orderID,
       count,
       total: price*count,
       time,
@@ -35,7 +35,7 @@ let{id, price, count} = ctx.request.body
         await findCart.remove()
         ctx.body={
           code:0,
-          id:orderId
+          id:orderID
         }
       } else {
         ctx.body = {
@@ -50,7 +50,7 @@ let{id, price, count} = ctx.request.body
   }
 })
 
-router.post('/getOrder', async ctx => {
+router.post('/getOrders', async (ctx) => {
   if (!ctx.isAuthenticated()) {
     ctx.body = {
       code: -1,
@@ -71,11 +71,11 @@ router.post('/getOrder', async ctx => {
           list: []
         }
       }
-      } catch (e) {
-        ctx.body = {
-          code: -1,
-          list: []
-        }
+    } catch (e) {
+      ctx.body = {
+        code: -1,
+        list: []
+      }
     }
   }
 })

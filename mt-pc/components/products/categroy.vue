@@ -1,6 +1,6 @@
 <template>
   <div class="m-product-categroy">
-    <!--<dl class="classic">-->
+    <dl class="classic" v-show="false">
       <!--<dt>分类</dt>-->
       <!--<dt>全部</dt>-->
       <!--<dd-->
@@ -10,7 +10,7 @@
           <!--:name="item.type"-->
           <!--:list="item.module"/>-->
       <!--</dd>-->
-    <!--</dl>-->
+    </dl>
     <!--<dl class="classic">-->
       <!--<dt>分类</dt>-->
       <!--<dt>全部</dt>-->

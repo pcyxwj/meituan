@@ -111,7 +111,7 @@ async function start() {
   app.use(_search2.default.routes()).use(_search2.default.allowedMethods());
   app.use(_categroy2.default.routes()).use(_categroy2.default.allowedMethods());
   app.use(_cart2.default.routes()).use(_cart2.default.allowedMethods());
-  app.use(_order2.default.routes()).use(_cart2.default.allowedMethods());
+  app.use(_order2.default.routes()).use(_order2.default.allowedMethods());
   //路由要放在这之前，否则可能失效
   app.use(function (ctx) {
     ctx.status = 200; // koa defaults to 404 when it sees that status is unset

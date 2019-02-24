@@ -28,10 +28,10 @@
         </el-col>
         <el-col
           :span="19"
-        class="table">
+          class="table">
           <el-tabs
             v-model="activeName"
-            @tab-click="handleClick"/>
+            @tab-click="handleClick">
           <el-tab-pane
               label="全部订单"
               name="all">
@@ -52,6 +52,7 @@
             name="unreplay">
             <list :cur="cur"/>
           </el-tab-pane>
+          </el-tabs>
         </el-col>
       </el-row>
     </div>
@@ -97,7 +98,8 @@
       },
       methods: {
         handleClick: function (tab) {
-          this.activeName = tab.name
+          //this.activeName = tab.name
+          console.log(tab.name)
         }
       },
       async asyncData(ctx) {
@@ -131,5 +133,5 @@
 </script>
 
 <style lang="scss">
-  @import '@/assets/css/order/index.scss'
+  @import '@/assets/css/order/index.scss';
 </style>

@@ -35,7 +35,7 @@ router.post('/createOrder', async function (ctx) {
       count = _ctx$request$body.count;
 
   var time = Date();
-  var orderId = (0, _md2.default)(Math.random() * 1000 + time).toString();
+  var orderID = (0, _md2.default)(Math.random() * 1000 + time).toString();
 
   if (!ctx.isAuthenticated()) {
     ctx.body = {
@@ -45,7 +45,7 @@ router.post('/createOrder', async function (ctx) {
   } else {
     var findCart = await _cart2.default.findOne({ cartNo: id });
     var order = new _order2.default({
-      id: orderId,
+      id: orderID,
       count: count,
       total: price * count,
       time: time,
@@ -61,7 +61,7 @@ router.post('/createOrder', async function (ctx) {
         await findCart.remove();
         ctx.body = {
           code: 0,
-          id: orderId
+          id: orderID
         };
       } else {
         ctx.body = {
@@ -76,7 +76,7 @@ router.post('/createOrder', async function (ctx) {
   }
 });
 
-router.post('/getOrder', async function (ctx) {
+router.post('/getOrders', async function (ctx) {
   if (!ctx.isAuthenticated()) {
     ctx.body = {
       code: -1,

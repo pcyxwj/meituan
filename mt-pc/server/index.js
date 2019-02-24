@@ -61,7 +61,7 @@ async function start() {
   app.use(search.routes()).use(search.allowedMethods())
   app.use(categroy.routes()).use(categroy.allowedMethods())
   app.use(cart.routes()).use(cart.allowedMethods())
-  app.use(order.routes()).use(cart.allowedMethods())
+  app.use(order.routes()).use(order.allowedMethods())
 //路由要放在这之前，否则可能失效
   app.use(ctx => {
     ctx.status = 200 // koa defaults to 404 when it sees that status is unset
